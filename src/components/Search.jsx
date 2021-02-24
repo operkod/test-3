@@ -1,13 +1,15 @@
 import React from "react"
 
-const Search = ({ debounceSearch }) => {
+const Search = ({ onSearch }) => {
   const [inputValue, setInputValue] = React.useState("")
+
   const handleChange = (e) => {
     const value = e.target.value
     setInputValue(value)
-    debounceSearch(value)
   }
-
+  React.useEffect(() => {
+    onSearch(inputValue)
+  }, [inputValue])
   return (
     <div className="input-group mb-3 mt-3">
       <span className="input-group-text" id="inputGroup-sizing-default">

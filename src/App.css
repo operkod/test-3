@@ -15,3 +15,15 @@
 .progress :focus {
   outline: none;
 }
+.arrow {
+  margin-left: 5px;
+  display: none;
+  width: 10px;
+  height: 10px;
+}
+.arrow-active {
+  display: inline-block;
+}
+.arrow-line {
+  transform: rotateX(180deg);
+}

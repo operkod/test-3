@@ -1,6 +1,6 @@
 import React from "react"
 import ReactPaginate from "react-paginate"
-import { chunk, orderBy, debounce } from "lodash"
+import { chunk, orderBy } from "lodash"
 
 import ProgressBlock from "./components/ProgressBlock"
 import Search from "./components/Search"
@@ -13,8 +13,8 @@ function App() {
   const [state, setState] = React.useState([])
   const [dataTable, setDataTable] = React.useState([])
   const [pageNumber, setPageNumber] = React.useState(0)
-  const [sort, setSort] = React.useState("asc")
-
+  const [sort, setSort] = React.useState({ name: "id", line: "asc" })
+  console.log(sort)
   React.useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/comments")
       .then((response) => response.json())
@@ -29,16 +29,15 @@ function App() {
   }
 
   const onSort = (sortField) => {
-    const sortItem = sort === "asc" ? "desc" : "asc"
-    const data = orderBy(state, sortField, sortItem)
+    const sortItem = sort.line === "asc" ? "desc" : "asc"
+    const flatData = dataTable.flat()
+    const data = orderBy(flatData, sortField, sortItem)
     setDataTable(chunk(data, tableSize))
-    setSort(sortItem)
+    setSort({ name: sortField, line: sortItem })
   }
-  const debounceSearch = React.useCallback(
-    debounce((value) => onSearch(value), 300),
-    []
-  )
+
   const onSearch = (value) => {
+    console.log(value, "value")
     const data = state.filter(
       (item) =>
         item.name.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
@@ -52,16 +51,20 @@ function App() {
       <div>
         <ProgressBlock />
       </div>
-      <Search debounceSearch={debounceSearch} />
+      <Search onSearch={onSearch} />
       <table className="table">
-        <HeadTable onSort={onSort} />
+        <HeadTable onSort={onSort} selectSort={sort} />
         <tbody>
-          {dataTable.length
-            ? dataTable[pageNumber].map((item, i) => <Table key={`${item}_${i}`} item={item} />)
-            : null}
+          {dataTable.length ? (
+            dataTable[pageNumber].map((item, i) => <Table key={`${item}_${i}`} item={item} />)
+          ) : (
+            <tr>
+              <th>Ничего не найдено</th>
+            </tr>
+          )}
         </tbody>
       </table>
-      {dataTable.length > tableSize ? (
+      {dataTable.length > 1 ? (
         <ReactPaginate
           previousLabel={"prev"}
           nextLabel={"next"}
