@@ -2,7 +2,6 @@ import React from "react"
 import classNames from "class-names"
 
 const HeadTable = ({ onSort, selectSort }) => {
-  console.log(selectSort)
   return (
     <thead>
       <tr>

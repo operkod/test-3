@@ -14,7 +14,7 @@ function App() {
   const [dataTable, setDataTable] = React.useState([])
   const [pageNumber, setPageNumber] = React.useState(0)
   const [sort, setSort] = React.useState({ name: "id", line: "asc" })
-  console.log(sort)
+
   React.useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/comments")
       .then((response) => response.json())
@@ -37,7 +37,6 @@ function App() {
   }
 
   const onSearch = (value) => {
-    console.log(value, "value")
     const data = state.filter(
       (item) =>
         item.name.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
